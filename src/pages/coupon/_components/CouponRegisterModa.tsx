@@ -1,13 +1,26 @@
 import { IMAGE_CONSTANTS } from "@constants/imageConstants";
 import * as S from "./Coupon.styled";
-const CouponRegisterModal = () => {
+import { useState } from "react";
+
+interface CouponProps {
+  handleCloseModal: () => void;
+}
+
+const CouponRegisterModal = ({ handleCloseModal }: CouponProps) => {
+  const [buttonDisable, setButtonDisable] = useState<boolean>(true);
+
+  const [couponName, setCouponName] = useState<string | null>();
+  const [couponDescription, setCouponDescription] = useState<string | null>();
+  const [discountValue, setDiscountValue] = useState<number | null>();
   return (
     <S.Wrapper>
       <S.ModalBody>
-        쿠폰등록
-        <button type="button" onClick={() => console.log("닫기")}>
-          <img src={IMAGE_CONSTANTS.CLOSE} alt="닫기" />
-        </button>
+        <S.ModalHeader>
+          쿠폰등록
+          <button type="button" onClick={handleCloseModal}>
+            <img src={IMAGE_CONSTANTS.CLOSE} alt="닫기" />
+          </button>
+        </S.ModalHeader>
         <S.FormContentWrapper>
           <S.ele>
             <S.SubTitle>
@@ -45,6 +58,14 @@ const CouponRegisterModal = () => {
           </S.ele>
         </S.FormContentWrapper>
       </S.ModalBody>
+      <S.ModalConfirmContainer>
+        <button type="button" onClick={handleCloseModal}>
+          취소
+        </button>
+        <button type="submit" disabled={buttonDisable}>
+          쿠폰등록
+        </button>
+      </S.ModalConfirmContainer>
     </S.Wrapper>
   );
 };

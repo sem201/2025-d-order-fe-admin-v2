@@ -22,7 +22,7 @@ const CouponCreateCard = () => {
       {registerModal && (
         <ModalWrapper onClick={handleCloseModal}>
           <div onClick={(e) => e.stopPropagation()}>
-            <CouponRegisterModal />
+            <CouponRegisterModal handleCloseModal={handleCloseModal} />
           </div>
         </ModalWrapper>
       )}

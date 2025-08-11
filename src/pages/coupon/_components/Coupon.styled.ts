@@ -104,6 +104,7 @@ export const FormContentWrapper = styled.div`
 
   max-height: 450px;
   overflow-y: auto;
+  scrollbar-width: none;
 `;
 
 export const SubTitle = styled.p`
