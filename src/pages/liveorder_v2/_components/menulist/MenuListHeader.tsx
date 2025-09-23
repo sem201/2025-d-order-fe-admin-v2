@@ -7,7 +7,6 @@ const MenuListHeader = () => {
   const { viewMode, setViewMode, reconnectWebSocket } = useLiveOrderStore();
   // '최신 주문 확인' 버튼 클릭 시 실행될 핸들러
   const handleReconnect = () => {
-    console.log("최신 주문 확인 버튼 클릭 - 웹소켓 재연결 시도");
     reconnectWebSocket();
   };
 

@@ -42,7 +42,6 @@ export const useStaffCall = () => {
         );
 
         setNotifications(fetchedNotifications.slice(0, 7));
-        console.log("✅ [GET] 초기 알림 기록을 성공적으로 가져왔습니다.");
       } catch (e) {
         const error = e as AxiosError;
         console.error("🔴 [GET] 초기 알림 기록 로딩 중 오류:", error.message);
@@ -56,14 +55,13 @@ export const useStaffCall = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      console.error("🔴 [CALL] 웹소켓 연결 실패: 액세스 토큰이 없습니다.");
       return;
     }
 
     const wsUrl = `wss://api.test-d-order.store/ws/call/?token=${accessToken}`;
     const ws = new WebSocket(wsUrl);
 
-    ws.onopen = () => console.log("✅ [CALL] 직원 호출 웹소켓 연결 성공!");
+    // ws.onopen = () => console.log("✅ [CALL] 직원 호출 웹소켓 연결 성공!");
 
     ws.onmessage = (event) => {
       try {
@@ -92,7 +90,7 @@ export const useStaffCall = () => {
     };
 
     ws.onerror = (error) => console.error("🔴 [CALL] 웹소켓 에러 발생:", error);
-    ws.onclose = () => console.log("⚪️ [CALL] 웹소켓 연결이 종료되었습니다.");
+    // ws.onclose = () => console.log("⚪️ [CALL] 웹소켓 연결이 종료되었습니다.");
 
     return () => {
       ws.close();

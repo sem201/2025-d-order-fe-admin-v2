@@ -11,15 +11,10 @@ const useBoothRevenue = () => {
   // 1. 부스 이름만 가져오는 useEffect
   useEffect(() => {
     const fetchBoothName = async () => {
-      console.log("🚀 [GET API] 부스 이름 조회를 시작합니다.");
       const response = await BoothService.getBoothRevenue();
       if (response.data) {
         setError(null);
         setBoothName(response.data.booth_name);
-        console.log(
-          "✅ [BOOTH] 부스 이름을 성공적으로 가져왔습니다:",
-          response.data.booth_name
-        );
         // ❌ 여기서 매출(total_revenue)은 상태로 설정하지 않습니다.
       } else {
         setError(response.message);
@@ -34,7 +29,6 @@ const useBoothRevenue = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      console.error("🔴 [REVENUE] 웹소켓 연결 실패: 액세스 토큰이 없습니다.");
       setError("로그인이 필요합니다.");
       return;
     }
@@ -43,13 +37,12 @@ const useBoothRevenue = () => {
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
-      console.log("✅ [REVENUE] 총매출 웹소켓 연결 성공!");
+      // console.log("✅ [REVENUE] 총매출 웹소켓 연결 성공!");
     };
 
     ws.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-        console.log("📥 [REVENUE] 새로운 매출 메시지 수신:", message);
 
         // 스냅샷 또는 업데이트 이벤트 발생 시 총매출 상태 업데이트
         if (
@@ -68,15 +61,15 @@ const useBoothRevenue = () => {
       setError("매출 실시간 업데이트 중 오류가 발생했습니다.");
     };
 
-    ws.onclose = (event) => {
-      console.log(
-        `⚪️ [REVENUE] 웹소켓 연결이 종료되었습니다. 코드: ${event.code}`
-      );
+    ws.onclose = (_event) => {
+      // console.log(
+      //   `⚪️ [REVENUE] 웹소켓 연결이 종료되었습니다. 코드: ${event.code}`
+      // );
     };
 
     // 컴포넌트 언마운트 시 웹소켓 연결 종료
     return () => {
-      console.log("🧹 [REVENUE] 총매출 웹소켓 연결을 종료합니다.");
+      // console.log("🧹 [REVENUE] 총매출 웹소켓 연결을 종료합니다.");
       ws.close();
     };
   }, []); // 이 useEffect도 마운트 시 한 번만 실행됩니다.

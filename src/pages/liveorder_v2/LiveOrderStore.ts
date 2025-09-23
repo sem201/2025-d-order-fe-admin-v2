@@ -60,7 +60,7 @@ export const useLiveOrderStore = create<LiveOrderState>()(
     updateOrderStatusWithAnimation: async (orderId, newStatus) => {
       // 1. 중복 클릭 방지
       if (get().pendingOrderUpdates.has(orderId)) {
-        console.log(`🟡 Order ${orderId} update is already in progress.`);
+        // console.log(`🟡 Order ${orderId} update is already in progress.`);
         return;
       }
 
@@ -170,7 +170,6 @@ export const useLiveOrderStore = create<LiveOrderState>()(
 
         if (message.type === "ORDER_SNAPSHOT") {
           // --- 📸 스냅샷: 모든 주문 데이터를 교체합니다. ---
-          console.log("📸 ORDER_SNAPSHOT 수신", incomingOrders);
           const sortedOrders = incomingOrders.sort(
             (a, b) =>
               new Date(a.created_at).getTime() -
@@ -185,7 +184,6 @@ export const useLiveOrderStore = create<LiveOrderState>()(
           get().setMenuList(menuNames);
         } else if (message.type === "ORDER_UPDATE") {
           // --- 🔄 업데이트: 기존 주문 데이터에 변경사항을 병합합니다. ---
-          console.log("🔄 ORDER_UPDATE 수신", incomingOrders);
 
           set((state) => {
             const orderMap = new Map(
@@ -228,7 +226,7 @@ export const useLiveOrderStore = create<LiveOrderState>()(
     reconnectWebSocket: () => {
       const { accessToken } = get();
       if (accessToken) {
-        console.log("🔄 웹소켓 재연결을 시도합니다...");
+        // console.log("🔄 웹소켓 재연결을 시도합니다...");
         get().initializeWebSocket(accessToken);
       } else {
         console.error("🔴 AccessToken이 없어 재연결할 수 없습니다.");

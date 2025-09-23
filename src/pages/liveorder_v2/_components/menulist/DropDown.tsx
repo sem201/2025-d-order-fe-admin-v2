@@ -26,7 +26,6 @@ const DropDown = ({ selectedOption, onOptionSelect }: DropDownProps) => {
   // 드롭다운 클릭시 호출할 함수 드롭다운을 열림상태로바꿈
   const dropdownOpen = () => {
     setIsOpen(!isOpen);
-    console.log("드롭다운 오픈");
   };
 
   // 드롭다운 옵션클릭할때 호출되는 함수(옵션을 선택하고 드롭다운 닫음)

@@ -4,7 +4,6 @@ import { TableInfo } from "../Type/Menu_type";
 type TableFeeCardProps = { table: TableInfo };
 
 const TableFeeCard = ({ table }: TableFeeCardProps) => {
-  console.log(table);
   return (
     <TableFeeCardWrapper>
       {table.seat_type === "테이블 이용료 없음" && (

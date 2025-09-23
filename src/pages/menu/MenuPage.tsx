@@ -30,13 +30,11 @@ const MenuPage = () => {
 
   useEffect(() => {
     fetchMenus();
-    console.log(boothMenuData);
   }, [onSuccess]);
 
   // 추후 삭제
   useEffect(() => {
     if (boothMenuData) {
-      console.log(boothMenuData);
     }
   }, [boothMenuData]);
 

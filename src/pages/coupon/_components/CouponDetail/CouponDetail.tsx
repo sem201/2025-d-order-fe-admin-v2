@@ -23,7 +23,6 @@ export const CouponDetail = ({ couponId, setSelectedCouponId }: Props) => {
   const handleDownExcel = async () => {
     try {
       await CouponService.getDownCouponExcel(couponId);
-      console.log("쿠폰 엑셀 다운 성공");
     } catch (err) {
       console.error("쿠폰 엑셀 다운 실패:", err);
     }
@@ -31,7 +30,6 @@ export const CouponDetail = ({ couponId, setSelectedCouponId }: Props) => {
   const handleDelete = async () => {
     try {
       await CouponService.deleteCoupon(couponId);
-      console.log("쿠폰 삭제 성공");
       setShowDelete(false);
       setSelectedCouponId(null);
     } catch (err) {
@@ -88,7 +86,6 @@ export const CouponDetail = ({ couponId, setSelectedCouponId }: Props) => {
       </S.DetailContainer>
       <S.CouponList>
         {codes.map((c) => {
-          console.log(c.is_used);
           return <CouponItem key={c.code} code={c.code} isUsed={c.is_used} />;
         })}
       </S.CouponList>

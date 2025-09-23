@@ -1,4 +1,4 @@
-import { instance } from './instance';
+import { instance } from "./instance";
 
 export interface SignupRequest {
   username: string;
@@ -9,7 +9,7 @@ export interface SignupRequest {
   account: number;
   depositor: string;
   bank: string;
-  seat_type: 'PT' | 'PP' | 'NO';
+  seat_type: "PT" | "PP" | "NO";
   seat_tax_person: number;
   seat_tax_table: number;
   table_limit_hours: number;
@@ -34,24 +34,23 @@ export interface LoginResponse {
 
 const UserService = {
   postSignup: async (data: SignupRequest) => {
-    const response = await instance.post('/api/v2/manager/signup/', data);
+    const response = await instance.post("/api/v2/manager/signup/", data);
     return response.data;
   },
 
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     try {
-      const response = await instance.post('/api/v2/manager/auth/', data);
+      const response = await instance.post("/api/v2/manager/auth/", data);
 
       if (!response.data?.token?.access) {
-        throw new Error('로그인 응답이 올바르지 않습니다.');
+        throw new Error("로그인 응답이 올바르지 않습니다.");
       }
-      console.log(response);
 
-      localStorage.setItem('Booth-ID', String(response.data.data.booth_id));
+      localStorage.setItem("Booth-ID", String(response.data.data.booth_id));
 
       return response.data;
     } catch (error: any) {
-      throw new Error('로그인 응답이 올바르지 않습니다.');
+      throw new Error("로그인 응답이 올바르지 않습니다.");
     }
   },
 };

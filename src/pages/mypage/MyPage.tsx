@@ -19,16 +19,48 @@ import AccountField from "./components/AccountField";
 import ReadonlyField from "./components/ReadonlyField";
 import BottomActions from "./components/BottomActions";
 
-const SeatTypeLabel: Record<ManagerInfo["seat_type"], string> = { PP: "인원 수", PT: "테이블", NO: "받지 않음" };
-const LabelToSeatType: Record<string, ManagerInfo["seat_type"]> = { "인원 수": "PP", "테이블": "PT", "받지 않음": "NO" };
+const SeatTypeLabel: Record<ManagerInfo["seat_type"], string> = {
+  PP: "인원 수",
+  PT: "테이블",
+  NO: "받지 않음",
+};
+const LabelToSeatType: Record<string, ManagerInfo["seat_type"]> = {
+  "인원 수": "PP",
+  테이블: "PT",
+  "받지 않음": "NO",
+};
 
 const minutesToLabel = (m?: number) => {
-  switch (m) { case 60: return "1시간"; case 90: return "1시간 30분"; case 120: return "2시간";
-    case 150: return "2시간 30분"; case 180: return "3시간"; default: return "2시간"; }
+  switch (m) {
+    case 60:
+      return "1시간";
+    case 90:
+      return "1시간 30분";
+    case 120:
+      return "2시간";
+    case 150:
+      return "2시간 30분";
+    case 180:
+      return "3시간";
+    default:
+      return "2시간";
+  }
 };
 const labelToMinutes = (label: string) => {
-  switch (label) { case "1시간": return 60; case "1시간 30분": return 90; case "2시간": return 120;
-    case "2시간 30분": return 150; case "3시간": return 180; default: return 120; }
+  switch (label) {
+    case "1시간":
+      return 60;
+    case "1시간 30분":
+      return 90;
+    case "2시간":
+      return 120;
+    case "2시간 30분":
+      return 150;
+    case "3시간":
+      return 180;
+    default:
+      return 120;
+  }
 };
 
 type PatchField = "storeName" | "account" | "seat" | "time";
@@ -56,7 +88,8 @@ const MyPage = () => {
   const [account, setAccount] = useState("");
 
   // 좌석 과금
-  const [seatTypeLocal, setSeatTypeLocal] = useState<ManagerInfo["seat_type"]>("NO");
+  const [seatTypeLocal, setSeatTypeLocal] =
+    useState<ManagerInfo["seat_type"]>("NO");
   const [seatTypeLabel, setSeatTypeLabel] = useState<string>("받지 않음");
   const [seatAmountLocal, setSeatAmountLocal] = useState<string>("");
 
@@ -68,20 +101,28 @@ const MyPage = () => {
     if (!my) return;
     if (!editingName) setStoreName(my.booth_name ?? "");
     if (!editingAccount) {
-      setSelectedBank(my.bank ?? ""); setOwner(my.depositor ?? ""); setAccount(my.account ?? "");
+      setSelectedBank(my.bank ?? "");
+      setOwner(my.depositor ?? "");
+      setAccount(my.account ?? "");
     }
     if (!editingSeat) {
       setSeatTypeLocal(my.seat_type);
       setSeatTypeLabel(SeatTypeLabel[my.seat_type]);
-      const amt = my.seat_type === "PP" ? my.seat_tax_person ?? 0
-                : my.seat_type === "PT" ? my.seat_tax_table ?? 0 : 0;
+      const amt =
+        my.seat_type === "PP"
+          ? my.seat_tax_person ?? 0
+          : my.seat_type === "PT"
+          ? my.seat_tax_table ?? 0
+          : 0;
       setSeatAmountLocal(String(amt || ""));
     }
     if (!editingTime) setTimeLabelLocal(minutesToLabel(my.table_limit_hours));
   }, [my, editingName, editingAccount, editingSeat, editingTime]);
 
   // 라벨 ↔ 코드 연동
-  useEffect(() => { setSeatTypeLocal(LabelToSeatType[seatTypeLabel] ?? "NO"); }, [seatTypeLabel]);
+  useEffect(() => {
+    setSeatTypeLocal(LabelToSeatType[seatTypeLabel] ?? "NO");
+  }, [seatTypeLabel]);
 
   const startEdit = (f: PatchField) => {
     if (!my) return;
@@ -93,14 +134,32 @@ const MyPage = () => {
 
   const cancelEdit = (f: PatchField) => {
     if (!my) return;
-    if (f === "storeName") { setEditingName(false); setStoreName(my.booth_name ?? ""); }
-    if (f === "account") { setEditingAccount(false); setSelectedBank(my.bank ?? ""); setOwner(my.depositor ?? ""); setAccount(my.account ?? ""); }
+    if (f === "storeName") {
+      setEditingName(false);
+      setStoreName(my.booth_name ?? "");
+    }
+    if (f === "account") {
+      setEditingAccount(false);
+      setSelectedBank(my.bank ?? "");
+      setOwner(my.depositor ?? "");
+      setAccount(my.account ?? "");
+    }
     if (f === "seat") {
-      setEditingSeat(false); setSeatTypeLocal(my.seat_type); setSeatTypeLabel(SeatTypeLabel[my.seat_type]);
-      const amt = my.seat_type === "PP" ? my.seat_tax_person ?? 0 : my.seat_type === "PT" ? my.seat_tax_table ?? 0 : 0;
+      setEditingSeat(false);
+      setSeatTypeLocal(my.seat_type);
+      setSeatTypeLabel(SeatTypeLabel[my.seat_type]);
+      const amt =
+        my.seat_type === "PP"
+          ? my.seat_tax_person ?? 0
+          : my.seat_type === "PT"
+          ? my.seat_tax_table ?? 0
+          : 0;
       setSeatAmountLocal(String(amt || ""));
     }
-    if (f === "time") { setEditingTime(false); setTimeLabelLocal(minutesToLabel(my.table_limit_hours)); }
+    if (f === "time") {
+      setEditingTime(false);
+      setTimeLabelLocal(minutesToLabel(my.table_limit_hours));
+    }
   };
 
   const confirmEdit = async (f: PatchField) => {
@@ -121,30 +180,36 @@ const MyPage = () => {
 
       if (seatTypeLocal === "PP") {
         payload.seat_tax_person = typeof amount === "number" ? amount : 0;
-        payload.seat_tax_table = null;   // ← 명세
+        payload.seat_tax_table = null; // ← 명세
       } else if (seatTypeLocal === "PT") {
         payload.seat_tax_table = typeof amount === "number" ? amount : 0;
-        payload.seat_tax_person = null;  // ← 명세
+        payload.seat_tax_person = null; // ← 명세
       } else {
         // NO: 둘 다 null
-        payload.seat_tax_person = null;  // ← 명세
-        payload.seat_tax_table = null;   // ← 명세
+        payload.seat_tax_person = null; // ← 명세
+        payload.seat_tax_table = null; // ← 명세
       }
-    }
-    else if (f === "time") {
+    } else if (f === "time") {
       payload.table_limit_hours = labelToMinutes(timeLabelLocal);
     }
 
     console.groupCollapsed(`[PATCH] /api/v2/manager/mypage/ - ${f}`);
-    console.log("▶ payload", payload);
 
     try {
       const res = await update(payload);
       if (!res) {
-        toast.error(updateError || "수정 중 오류가 발생했습니다.", { closeButton: false, style: toToastStyle() });
-        console.groupEnd(); return;
+        toast.error(updateError || "수정 중 오류가 발생했습니다.", {
+          closeButton: false,
+          style: toToastStyle(),
+        });
+        console.groupEnd();
+        return;
       }
-      toast.success("저장되었습니다.", { icon: <img src={check} alt="체크" />, closeButton: false, style: toToastStyle() });
+      toast.success("저장되었습니다.", {
+        icon: <img src={check} alt="체크" />,
+        closeButton: false,
+        style: toToastStyle(),
+      });
       await reload();
       if (f === "storeName") setEditingName(false);
       if (f === "account") setEditingAccount(false);
@@ -152,35 +217,57 @@ const MyPage = () => {
       if (f === "time") setEditingTime(false);
     } catch (e: any) {
       console.error("✖ patch error", e);
-      toast.error(e?.message || "수정 중 오류가 발생했습니다.", { closeButton: false, style: toToastStyle() });
+      toast.error(e?.message || "수정 중 오류가 발생했습니다.", {
+        closeButton: false,
+        style: toToastStyle(),
+      });
     } finally {
       console.groupEnd();
     }
   };
 
   const toToastStyle = () => ({
-    backgroundColor: "#FF6E3F", color: "#FAFAFA", fontSize: "1rem", fontWeight: 800 as const,
-    borderRadius: "8px", padding: "0.75rem 0.875rem",
+    backgroundColor: "#FF6E3F",
+    color: "#FAFAFA",
+    fontSize: "1rem",
+    fontWeight: 800 as const,
+    borderRadius: "8px",
+    padding: "0.75rem 0.875rem",
   });
 
   const handleQrClick = async () => {
     if (!my) return;
     try {
       await downloadManagerQR(my.booth);
-      toast.success("QR코드 다운로드가 완료되었어요!", { icon: <img src={check} alt="체크" />, closeButton: false, style: toToastStyle() });
+      toast.success("QR코드 다운로드가 완료되었어요!", {
+        icon: <img src={check} alt="체크" />,
+        closeButton: false,
+        style: toToastStyle(),
+      });
     } catch (err: any) {
-      toast.error(err?.message || "QR코드 다운로드에 실패했습니다.", { closeButton: false, style: toToastStyle() });
+      toast.error(err?.message || "QR코드 다운로드에 실패했습니다.", {
+        closeButton: false,
+        style: toToastStyle(),
+      });
     }
   };
 
   const handleLogout = async () => {
     try {
       await requestLogout();
-      localStorage.removeItem("accessToken"); localStorage.removeItem("access"); localStorage.removeItem("token");
-      toast.success("로그아웃되었습니다.", { closeButton: false, style: toToastStyle() });
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("access");
+      localStorage.removeItem("token");
+      toast.success("로그아웃되었습니다.", {
+        closeButton: false,
+        style: toToastStyle(),
+      });
       window.location.href = "/login";
     } catch (err: any) {
-      toast.error(err?.message || "로그아웃에 실패했습니다.", { closeButton: false, style: toToastStyle() });
+      toast.error(err?.message || "로그아웃에 실패했습니다.", {
+        closeButton: false,
+        style: toToastStyle(),
+      });
       window.location.href = "/login";
     } finally {
       setShowLogoutModal(false);
@@ -254,7 +341,10 @@ const MyPage = () => {
             onCancel={() => cancelEdit("account")}
           />
 
-          <ReadonlyField label="주문 확인 비밀번호" value={my.order_check_password || "-"} />
+          <ReadonlyField
+            label="주문 확인 비밀번호"
+            value={my.order_check_password || "-"}
+          />
         </S.Row>
       </S.Container>
 
@@ -264,7 +354,10 @@ const MyPage = () => {
       />
 
       {showLogoutModal && (
-        <Modal onCancel={() => setShowLogoutModal(false)} onLogout={handleLogout} />
+        <Modal
+          onCancel={() => setShowLogoutModal(false)}
+          onLogout={handleLogout}
+        />
       )}
     </S.Wrapper>
   );
